@@ -14,23 +14,23 @@ import javax.swing.JMenuBar;
 public class CompresserMenuBar extends JMenuBar {
 
 	private static final long serialVersionUID = 4653199524130779333L;
-	private JFrame mainFrame;
+	private JFrame compresserFrame;
 	private JMenu fileMenu;
 	private JMenu helpMenu;
 
 	public CompresserMenuBar(JFrame mainFrame) {
-		this.mainFrame = mainFrame;
+		this.compresserFrame = mainFrame;
 		
 		this.fileMenu = new FileMenu(Constant.FILE);
 		this.helpMenu = new HelpMenu(Constant.HELP);
 
-		this.fileMenu.add(new OpenMenuItem(Constant.OPEN));
-		this.fileMenu.add(new ExitMenuItem(Constant.EXIT, this.mainFrame));
+		this.fileMenu.add(new OpenMenuItem(Constant.OPEN, this.compresserFrame));
+		this.fileMenu.add(new ExitMenuItem(Constant.EXIT, this.compresserFrame));
 		this.helpMenu.add(new AboutMenuItem(Constant.ABOUT));
 
 		this.add(this.fileMenu);
 		this.add(this.helpMenu);
 		
-		this.mainFrame.setJMenuBar(this);
+		this.compresserFrame.setJMenuBar(this);
 	}
 }
