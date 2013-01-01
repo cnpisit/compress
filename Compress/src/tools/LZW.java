@@ -59,11 +59,4 @@ public class LZW {
 		}
 		return result;
 	}
-
-	public static void main(String[] args) {
-		List<Integer> compressed = compress("TOBEORNOTTOBEORTOBEORNOT");
-		System.out.println(compressed);
-		String decompressed = decompress(compressed);
-		System.out.println(decompressed);
-	}
 }

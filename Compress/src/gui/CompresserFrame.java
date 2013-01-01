@@ -1,5 +1,7 @@
 package gui;
 
+import gui.button.CompressButton;
+import gui.button.DecompressButton;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -8,9 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -21,9 +20,6 @@ import javax.swing.KeyStroke;
 
 public class CompresserFrame extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1159140659861253290L;
 	public static final Dimension DEFAULT_SIZE = new Dimension(240, 520);
 	public JPanel northPanel = new JPanel();
@@ -32,6 +28,7 @@ public class CompresserFrame extends JFrame {
 	public CompresserFrame(String title) {
 		super(title);
 		this.setSize(DEFAULT_SIZE);
+		this.setResizable(false);
 		this.setLayout(new BorderLayout(5, 5));
 
 		this.initializeButton();
@@ -48,7 +45,8 @@ public class CompresserFrame extends JFrame {
 		JMenu editMenu = new JMenu("Help");
 
 		JMenuItem openMenuItem = new JMenuItem("open");
-		openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,InputEvent.CTRL_MASK));
+		openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				InputEvent.CTRL_MASK));
 
 		openMenuItem.addActionListener(new ActionListener() {
 			@Override
@@ -60,16 +58,18 @@ public class CompresserFrame extends JFrame {
 		});
 
 		JMenuItem exitMenuItem = new JMenuItem("exit");
-		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,InputEvent.CTRL_MASK));
+		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				InputEvent.CTRL_MASK));
 		exitMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				CompresserFrame.this.dispose();
 			}
 		});
-		
+
 		JMenuItem aboutMenuItem = new JMenuItem("About");
-		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,InputEvent.CTRL_MASK));
+		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				InputEvent.CTRL_MASK));
 		exitMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -79,7 +79,7 @@ public class CompresserFrame extends JFrame {
 
 		fileMenu.add(openMenuItem);
 		fileMenu.add(exitMenuItem);
-		
+
 		editMenu.add(aboutMenuItem);
 
 		menuBar.add(fileMenu);
@@ -89,8 +89,8 @@ public class CompresserFrame extends JFrame {
 	}
 
 	private void initializeButton() {
-		this.northPanel.add(new JButton("Compress"));
-		this.northPanel.add(new JButton("Decompress"));
+		this.northPanel.add(new CompressButton("Compress"));
+		this.northPanel.add(new DecompressButton("Decompress"));
 
 		this.add(northPanel);
 	}
