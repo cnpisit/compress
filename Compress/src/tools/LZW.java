@@ -1,62 +1,104 @@
 package tools;
 
-import java.util.*;
+import java.io.*;
 
-public class LZW {
-	/** Compress a string to a list of output symbols. */
-	public static List<Integer> compress(String uncompressed) {
-		// Build the dictionary.
-		int dictSize = 256;
-		Map<String, Integer> dictionary = new HashMap<String, Integer>();
-		for (int i = 0; i < 256; i++)
-			dictionary.put("" + (char) i, i);
+public class LZW implements Compression {
+	boolean stopped = false;
 
-		String w = "";
-		List<Integer> result = new ArrayList<Integer>();
-		for (char c : uncompressed.toCharArray()) {
-			String wc = w + c;
-			if (dictionary.containsKey(wc))
-				w = wc;
-			else {
-				result.add(dictionary.get(w));
-				// Add wc to the dictionary.
-				dictionary.put(wc, dictSize++);
-				w = "" + c;
-			}
-		}
+	Dictionary dict;
+	int numOfBits;
 
-		// Output the code for w.
-		if (!w.equals(""))
-			result.add(dictionary.get(w));
-		return result;
+	public final ByteArray emptyBA = new ByteArray();
+	ByteArray w = emptyBA;
+
+	public LZW() {
+		numOfBits = 12;
+		dict = new LimitedSizeDictionary(1 << numOfBits);
+		for (int i = 0; i < 256; ++i)
+			dict.add(new ByteArray((byte) i));
 	}
 
-	/** Decompress a list of output ks to a string. */
-	public static String decompress(List<Integer> compressed) {
-		// Build the dictionary.
-		int dictSize = 256;
-		Map<Integer, String> dictionary = new HashMap<Integer, String>();
-		for (int i = 0; i < 256; i++)
-			dictionary.put(i, "" + (char) i);
+	public int encodeOneChar(int n) {
+		byte c = (byte) n;
+		ByteArray nw = w.conc(c);
+		int code = dict.numFromStr(nw);
 
-		String w = "" + (char) (int) compressed.remove(0);
-		String result = w;
-		for (int k : compressed) {
-			String entry;
-			if (dictionary.containsKey(k))
-				entry = dictionary.get(k);
-			else if (k == dictSize)
-				entry = w + w.charAt(0);
-			else
-				throw new IllegalArgumentException("Bad compressed k: " + k);
-
-			result += entry;
-
-			// Add w+entry[0] to the dictionary.
-			dictionary.put(dictSize++, w + entry.charAt(0));
-
-			w = entry;
+		if (code != -1) {
+			w = nw;
+			return -1;
+		} else {
+			dict.add(nw);
+			nw = w;
+			w = new ByteArray(c);
+			return dict.numFromStr(nw);
 		}
-		return result;
+	}
+
+	public int encodeLast() {
+		ByteArray nw = w;
+		w = emptyBA;
+		return dict.numFromStr(nw);
+	}
+
+	public void writeCode(OutputStream os, int code) throws IOException {
+		for (int i = 0; i < numOfBits; ++i) {
+			os.write(code & 1);
+			code /= 2;
+		}
+	}
+
+	public int readCode(InputStream is) throws IOException {
+		int num = 0;
+		for (int i = 0; i < numOfBits; ++i) {
+			int next = is.read();
+			if (next < 0)
+				return -1;
+			num += next << i;
+		}
+		return num;
+	}
+
+	public void compress(InputStream is, OutputStream os) throws IOException {
+		os = new BitOutputStream(os);
+		int next;
+		int code;
+		while ((next = is.read()) >= 0) {
+			if (stopped)
+				break;
+			code = encodeOneChar(next);
+			if (code >= 0)
+				writeCode(os, code);
+		}
+		code = encodeLast();
+		if (code >= 0)
+			writeCode(os, code);
+		os.flush();
+	}
+
+	public ByteArray decodeOne(int code) {
+		ByteArray str = dict.strFromNum(code);
+		if (str == null) {
+			str = w.conc(w.getAt(0));
+			dict.add(str);
+		} else if (!w.isEmpty())
+			dict.add(w.conc(str.getAt(0)));
+		w = str;
+		return w;
+	}
+
+	public void decompress(InputStream is, OutputStream os) throws IOException {
+		is = new BitInputStream(is);
+		ByteArray str;
+		int code;
+		while ((code = readCode(is)) >= 0) {
+			if (stopped)
+				break;
+			str = decodeOne(code);
+			os.write(str.getBytes());
+		}
+	}
+
+	public void stop() {
+		stopped = true;
 	}
 }

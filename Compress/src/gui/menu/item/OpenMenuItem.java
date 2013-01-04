@@ -26,6 +26,7 @@ public class OpenMenuItem extends JMenuItem implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JFileChooser jfc = new JFileChooser();
 		jfc.showOpenDialog(getParent());
+
 	}
 
 }
