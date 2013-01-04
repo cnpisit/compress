@@ -21,16 +21,10 @@ public class CompresserMenuBar extends JMenuBar {
 	public CompresserMenuBar(JFrame mainFrame) {
 		this.compresserFrame = mainFrame;
 		
-		this.fileMenu = new FileMenu(Constant.FILE);
-		this.helpMenu = new HelpMenu(Constant.HELP);
-
-		this.fileMenu.add(new OpenMenuItem(Constant.OPEN, this.compresserFrame));
-		this.fileMenu.add(new ExitMenuItem(Constant.EXIT, this.compresserFrame));
-		this.helpMenu.add(new AboutMenuItem(Constant.ABOUT));
+		this.fileMenu = new FileMenu(Constant.FILE, this.compresserFrame);
+		this.helpMenu = new HelpMenu(Constant.HELP, this.compresserFrame);
 
 		this.add(this.fileMenu);
 		this.add(this.helpMenu);
-		
-		this.compresserFrame.setJMenuBar(this);
 	}
 }

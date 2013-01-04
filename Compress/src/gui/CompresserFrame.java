@@ -56,7 +56,7 @@ public class CompresserFrame extends JFrame {
 	}
 
 	private void initializeMenu() {
-		new CompresserMenuBar(this);
+		this.setJMenuBar(new CompresserMenuBar(this));
 	}
 
 	private void initializeButton() {
@@ -75,7 +75,7 @@ public class CompresserFrame extends JFrame {
 //		new JScrollPane(jTextArea).setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		String contents = null;
 		try {
-			contents = Tools.readFile(Asset.class.getResource("input/Input-File").getPath());
+			contents = Tools.readFile(Asset.class.getResource("input/Input-File.txt").getPath());
 		} catch (Exception e) {
 		}
 
