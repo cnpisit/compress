@@ -31,6 +31,8 @@ public class CompresserFrame extends JFrame {
 	public static final Dimension DEFAULT_SIZE = new Dimension(240, 520);
 	public JPanel northPanel = new JPanel();
 	public JPanel centerPanel = new JPanel();
+	
+	
 
 	public JPanel getCenterPanel() {
 		return centerPanel;

@@ -18,6 +18,7 @@ public class DecompressButton extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//code decompress writen here
 		System.out.println(this.getClass());
 	}
 

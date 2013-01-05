@@ -3,10 +3,14 @@ package tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Scanner;
 
 import asset.Asset;
@@ -34,6 +38,17 @@ public class Tools {
 			return Charset.defaultCharset().decode(bb).toString();
 		} finally {
 			stream.close();
+		} 
+	}
+	
+	public static void writeToFile(String outputPath, List<Integer> content)
+			throws IOException {
+		Writer out = new OutputStreamWriter(new FileOutputStream(outputPath),
+				"UTF-8");
+		try {
+			out.write(content.toString());
+		} finally {
+			out.close();
 		}
 	}
 }
