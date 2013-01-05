@@ -14,7 +14,7 @@ public class OpenMenuItem extends JMenuItem implements ActionListener {
 
 	private static final long serialVersionUID = -793626679121029988L;
 	private JFrame compresserFrame;
-	public static String filePath = null ;
+
 	public OpenMenuItem(String title, JFrame compresserFrame) {
 		super(title);
 		this.compresserFrame = compresserFrame;
@@ -25,11 +25,8 @@ public class OpenMenuItem extends JMenuItem implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JFileChooser jfc = new JFileChooser();
-		System.out.println(jfc.showOpenDialog(getParent()));
-		
-		//show full path of file 
-		this.filePath = jfc.getSelectedFile().toString();
-		
+		jfc.showOpenDialog(getParent());
+
 	}
 
 }
