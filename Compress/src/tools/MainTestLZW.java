@@ -16,10 +16,12 @@ public class MainTestLZW {
 		String filename = "Input-File.txt";
 		String filePath = Asset.class.getResource("input/"+filename).getPath();
 		
+		
 		try {
 			is = new FileInputStream(filePath);
 			os = new FileOutputStream(new String(filePath + ".lzw"));
 			lzw.compress(is, os);
+			os.close(); is.close();
 			
 			isDecompress = new FileInputStream(new String(filePath + ".lzw"));
 			osDecompress = new FileOutputStream(new String(filePath + ".lzw.decompressed.txt"));
